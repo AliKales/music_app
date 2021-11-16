@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "461965085964",
+    "project_id": "share-your-music",
+    "storage_bucket": "share-your-music.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:461965085964:android:0c335975747699bedccd29",
+        "android_client_info": {
+          "package_name": "com.caroby.caroby_share_your_music"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "461965085964-91fe6ufkcdufmnmd2nm68l2rvq65qsfk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLAA38wqJ02mqR1swCy-TpWjwA0FMSZ8o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "461965085964-91fe6ufkcdufmnmd2nm68l2rvq65qsfk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
