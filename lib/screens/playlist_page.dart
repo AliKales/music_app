@@ -8,6 +8,7 @@ import 'package:free_music/UIs/scroller_text/custom_appbar.dart';
 import 'package:free_music/UIs/scroller_text/song_list_widget.dart';
 import 'package:free_music/colors.dart';
 import 'package:free_music/firebase/firebase_firestore.dart';
+import 'package:free_music/functions.dart';
 import 'package:free_music/models/playlist.dart';
 import 'package:free_music/models/song.dart';
 import 'package:free_music/screens/playlist_adding_page.dart';
@@ -62,27 +63,40 @@ class _PlaylistPageState extends State<PlaylistPage> {
   }
 
   Future<void> gel() async {
-    List listGet = await FirebaseFirestoreService().getOwnSongs(
-        widget.playlist.songs.isEmpty ? [] : widget.playlist.songs);
-    if (listGet.isEmpty) {
-      setState(() {
-        noSong = true;
-      });
-    } else if (listGet[0] == 31) {
-      playlist = widget.playlist;
-      setState(() {
-        progress1 = false;
-      });
-    } else {
-      playlist = Playlist(
-          name: widget.playlist.name,
-          songs: listGet,
-          createdDate: DateTime.now());
-      box.put("ownSongs", playlist);
-      setState(() {
-        progress1 = false;
-      });
-    }
+    Functions().checkInternetConnection().then((value) async {
+      if (value) {
+        List listGet = await FirebaseFirestoreService().getOwnSongs(
+            widget.playlist.songs.isEmpty ? [] : widget.playlist.songs);
+        if (listGet.isEmpty) {
+          setState(() {
+            noSong = true;
+          });
+        } else if (listGet[0] == 31) {
+          playlist = widget.playlist;
+          setState(() {
+            progress1 = false;
+          });
+        } else {
+          playlist = Playlist(
+              name: widget.playlist.name,
+              songs: listGet,
+              createdDate: DateTime.now());
+          box.put("ownSongs", playlist);
+          setState(() {
+            progress1 = false;
+          });
+        }
+      } else {
+        Functions().showToast("No internet connection!", null);
+        setState(() {
+          playlist = Playlist(
+              name: widget.playlist.name,
+              songs: widget.playlist.songs,
+              createdDate: DateTime.now());
+          progress1 = false;
+        });
+      }
+    });
   }
 
   _scrollListener() {

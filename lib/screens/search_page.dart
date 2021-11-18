@@ -15,12 +15,14 @@ class SearchPage extends StatefulWidget {
   final Function(Song)? onDotsClicked;
   final Playlist? playlist;
   final bool isNormal;
+  final bool? wifi;
   const SearchPage(
       {Key? key,
       this.onDataChange,
       this.onDotsClicked,
       required this.isNormal,
-      this.playlist})
+      this.playlist,
+      this.wifi})
       : super(key: key);
 
   @override
@@ -60,9 +62,12 @@ class _SearchPageState extends State<SearchPage>
     } else {
       return Scaffold(
         backgroundColor: backgroundColor,
-        floatingActionButton: FloatingActionButton(backgroundColor: thirdColor,child: Icon(Icons.close),onPressed: () {
-          Navigator.pop(context);
-        }),
+        floatingActionButton: FloatingActionButton(
+            backgroundColor: thirdColor,
+            child: Icon(Icons.close),
+            onPressed: () {
+              Navigator.pop(context);
+            }),
         body: widgetsNormal(context),
       );
     }
@@ -176,7 +181,7 @@ class _SearchPageState extends State<SearchPage>
           } else {
             if (widget.playlist!.songs.any(
                 (element) => element.songName == listSent[index].songName)) {
-              Functions().showToast("This song already exits");
+              Functions().showToast("This song already exits",null);
             } else {
               Navigator.pop(context, listSent[index]);
             }
@@ -194,8 +199,7 @@ class _SearchPageState extends State<SearchPage>
   void normalWidgetFunc(int index, listSent) {
     Song song = listSent[index];
     widget.onDataChange!(song);
-    songsLastSearched
-        .removeWhere((element) => element.songId == song.songId);
+    songsLastSearched.removeWhere((element) => element.songId == song.songId);
     songsLastSearched.insert(0, song);
 
     if (songsLastSearched.length > 10) {
@@ -205,20 +209,23 @@ class _SearchPageState extends State<SearchPage>
   }
 
   Future getSongs(String searchedString) async {
-    songsTaken = [];
-    setState(() {
-      progressSearching = true;
-    });
-    await FirebaseFirestoreService()
-        .getSongDatasForSearch(searchedString)
-        .then((value) {
-      for (var i = 0; i < value.length; i++) {
-        songsTaken.add(value[i]);
-      }
+    final bool wifi = widget.wifi??await Functions().checkInternetConnection();
+    if (wifi) {
+      songsTaken = [];
       setState(() {
-        progressSearching = false;
+        progressSearching = true;
       });
-    });
+      await FirebaseFirestoreService()
+          .getSongDatasForSearch(searchedString)
+          .then((value) {
+        for (var i = 0; i < value.length; i++) {
+          songsTaken.add(value[i]);
+        }
+        setState(() {
+          progressSearching = false;
+        });
+      });
+    }
   }
 
   @override

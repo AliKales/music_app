@@ -1,13 +1,13 @@
 import 'dart:async';
-import 'dart:io';
-
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:free_music/UIs/scroller_text/custom_appbar.dart';
 import 'package:free_music/colors.dart';
 import 'package:free_music/firebase/firebase_auth.dart';
+import 'package:free_music/functions.dart';
 import 'package:free_music/screens/settings_page.dart';
 import 'package:free_music/screens/studio_share_page.dart';
 import 'package:free_music/size.dart';
@@ -35,7 +35,7 @@ class _StudioPageState extends State<StudioPage>
   Duration? totalDuration;
 
   Timer? timer;
-  Timer? timer2;
+  int counter = 0;
 
   AudioPlayer audioPlayer = AudioPlayer();
 
@@ -44,6 +44,12 @@ class _StudioPageState extends State<StudioPage>
     // TODO: implement initState
     super.initState();
     gel();
+  }
+
+  @override
+  void dispose() {
+    timer!.cancel();
+    super.dispose();
   }
 
   Future gel() async {
@@ -86,13 +92,23 @@ class _StudioPageState extends State<StudioPage>
           ],
           text: "Studio",
         ),
-        Container(
+        SizedBox(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height -
               SizeConfig.safeBlockVertical! * 30,
           child: Column(
             children: [
-              Expanded(child: SizedBox()),
+              const Expanded(child: SizedBox()),
+              Visibility(
+                visible: isPlaying || isRecording,
+                child: Text(
+                  getFixedDuration(counter),
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline6!
+                      .copyWith(color: Colors.white),
+                ),
+              ),
               AnimatedContainer(
                 duration: const Duration(milliseconds: 500),
                 width: SizeConfig.safeBlockHorizontal! * 50,
@@ -151,26 +167,31 @@ class _StudioPageState extends State<StudioPage>
                       ),
                     )
                   : const SizedBox.shrink(),
-              Expanded(child: SizedBox()),
+              const Expanded(child: SizedBox()),
               isAudioReady
                   ? ElevatedButton(
                       onPressed: () async {
-                        Route route;
-                        if (FirebaseAuthService().getUsername() ==
-                            "ozel_admin_code:002") {
-                          route = MaterialPageRoute(builder: (context) {
-                            return const SettingsPage();
+                        if (counter <= 240) {
+                          Route route;
+                          if (FirebaseAuthService().getUsername() ==
+                              "ozel_admin_code:002") {
+                            route = MaterialPageRoute(builder: (context) {
+                              return const SettingsPage();
+                            });
+                          } else {
+                            route = MaterialPageRoute(builder: (context) {
+                              return StudioSharePage(path: path);
+                            });
+                          }
+                          await Navigator.push(context, route).then((value) {
+                            if (value) {
+                              reset();
+                            }
                           });
                         } else {
-                          route = MaterialPageRoute(builder: (context) {
-                            return StudioSharePage(path: path);
-                          });
+                          Functions().showToast(
+                              "Maximum 4 minutes!", null);
                         }
-                        await Navigator.push(context, route).then((value) {
-                          if (value) {
-                            reset();
-                          }
-                        });
                       },
                       style: ButtonStyle(
                         backgroundColor:
@@ -207,6 +228,7 @@ class _StudioPageState extends State<StudioPage>
   Future reset() async {
     isRecording = false;
     isPlaying = false;
+    counter = 0;
     isAudioReady = false;
     currentDuration = null;
     totalDuration = null;
@@ -289,7 +311,6 @@ class _StudioPageState extends State<StudioPage>
           highlightColor: Colors.transparent,
           onPressed: () {
             handlePermissions().then((value) {
-              print(value);
               if (value) {
                 startRecording();
                 setState(() {
@@ -353,16 +374,21 @@ class _StudioPageState extends State<StudioPage>
   Future startRecording() async {
     try {
       path = await platform.invokeMethod('startRecording');
-      print(path + "-----------");
+      timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+        setState(() {
+          counter++;
+        });
+      });
     } catch (e) {
-      print(e);
+      Functions().showToast(
+          "Unexpected error. Please try again later!", ToastGravity.BOTTOM);
     }
   }
 
   Future stopRecording() async {
     try {
       final String result = await platform.invokeMethod('stopRecording');
-      print(result);
+      timer!.cancel();
       await audioPlayer.setUrl(path, isLocal: true);
     } catch (e) {
       print(e);

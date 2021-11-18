@@ -387,8 +387,16 @@ class _StudioSharePageState extends State<StudioSharePage> {
           actions: <Widget>[
             ElevatedButton(
               onPressed: () {
-                isReadyToShare = true;
-                Navigator.pop(context);
+                Functions().checkInternetConnection().then((value) {
+                  if (value) {
+                    isReadyToShare = true;
+                    Navigator.pop(context);
+                  } else {
+                    Navigator.pop(context);
+                    Functions().showToast(
+                        "No internet connection!", ToastGravity.BOTTOM);
+                  }
+                });
               },
               style:
                   ElevatedButton.styleFrom(primary: fourthColor, elevation: 0),
@@ -457,21 +465,6 @@ class _StudioSharePageState extends State<StudioSharePage> {
               FirebaseFirestoreService().setSongDatas(song).then((value) {
                 song.songUrl = value;
                 FirebaseFirestoreService().putOwnSong(song);
-                Playlist ownSongs = box.get("ownSongs") ??
-                    Playlist(
-                        name: "ownSongs",
-                        songs: [],
-                        createdDate: DateTime.now());
-                ownSongs.songs.insert(0, {
-                  'name': song.songName,
-                  'path': song.pathToSong,
-                  'songUrl': song.songUrl,
-                  'time': double.parse(song.songId
-                      .split("|")[0]
-                      .replaceAll(":", "")
-                      .replaceAll(".", ""))
-                });
-                box.put("ownSongs", ownSongs);
                 setState(() {
                   isShared = true;
                   isSharing = false;

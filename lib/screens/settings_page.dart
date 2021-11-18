@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:free_music/UIs/scroller_text/profile_photo.dart';
 import 'package:free_music/colors.dart';
+import 'package:free_music/functions.dart';
 import 'package:free_music/screens/main_page.dart';
 import 'package:free_music/size.dart';
 import 'package:hive/hive.dart';
@@ -143,25 +145,36 @@ class _SettingsPageState extends State<SettingsPage> {
                   : ElevatedButton(
                       onPressed: () async {
                         FocusScope.of(context).unfocus();
-                        if (checkUserNameAndPassword() == "") {
-                          setState(() {
-                            isProgress = true;
-                          });
-                          await signIn().then((value) {
-                            if (widget.isFirstPage == true) {
-                              Route route = MaterialPageRoute(
-                                  builder: (context) => const MainPage());
-                              Navigator.pushReplacement(context, route);
-                            } else {
+                        await Functions()
+                            .checkInternetConnection()
+                            .then((value) async {
+                          if (value) {
+                            if (checkUserNameAndPassword() == "") {
                               setState(() {
-                                isProgress = false;
+                                isProgress = true;
                               });
+                              await signIn().then((value) {
+                                if (widget.isFirstPage == true) {
+                                  Route route = MaterialPageRoute(
+                                      builder: (context) => const MainPage());
+                                  Navigator.pushReplacement(context, route);
+                                } else {
+                                  setState(() {
+                                    isProgress = false;
+                                  });
+                                }
+                              });
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content:
+                                          Text(checkUserNameAndPassword())));
                             }
-                          });
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Text(checkUserNameAndPassword())));
-                        }
+                          } else {
+                            Functions().showToast(
+                                "No internet Connection!", ToastGravity.BOTTOM);
+                          }
+                        });
                       },
                       style: ButtonStyle(
                         backgroundColor:
@@ -200,19 +213,30 @@ class _SettingsPageState extends State<SettingsPage> {
                   : ElevatedButton(
                       onPressed: () async {
                         FocusScope.of(context).unfocus();
-                        if (checkUserNameAndPassword() == "") {
-                          setState(() {
-                            isProgress = true;
-                          });
-                          await signUp().then((value) {
-                            setState(() {
-                              isProgress = false;
-                            });
-                          });
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Text(checkUserNameAndPassword())));
-                        }
+                        await Functions()
+                            .checkInternetConnection()
+                            .then((value) async {
+                          if (value) {
+                            if (checkUserNameAndPassword() == "") {
+                              setState(() {
+                                isProgress = true;
+                              });
+                              await signUp().then((value) {
+                                setState(() {
+                                  isProgress = false;
+                                });
+                              });
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content:
+                                          Text(checkUserNameAndPassword())));
+                            }
+                          } else {
+                            Functions().showToast(
+                                "No internet Connection!", ToastGravity.BOTTOM);
+                          }
+                        });
                       },
                       style: ButtonStyle(
                         backgroundColor:

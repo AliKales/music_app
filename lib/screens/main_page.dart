@@ -6,6 +6,7 @@ import 'package:free_music/UIs/scroller_text/song_player.dart';
 import 'package:free_music/colors.dart';
 import 'package:free_music/firebase/firebase_auth.dart';
 import 'package:free_music/firebase/firebase_firestore.dart';
+import 'package:free_music/functions.dart';
 import 'package:free_music/lists.dart';
 import 'package:free_music/models/playlist.dart';
 import 'package:free_music/models/song.dart';
@@ -39,7 +40,7 @@ class _MainPageState extends State<MainPage> {
   bool isSongLoading = false;
   bool newSong = true;
   bool isSignIn = false;
-  Wifi wifi = Wifi.ready;
+  Wifi? wifi;
   Playlist? currentPlaylist;
   StreamSubscription? streamForWifi;
 
@@ -65,7 +66,16 @@ class _MainPageState extends State<MainPage> {
     streamForWifi!.cancel();
   }
 
-  void checkSignIn() {
+  Future checkSignIn() async {
+    await Functions().checkInternetConnection().then((value) {
+      if (value == false) {
+        setState(() {
+          wifi = Wifi.notConnected;
+        });
+      } else
+        wifi ??= Wifi.ready;
+    });
+
     if (FirebaseAuthService().getEmail() == "") {
       Route route = MaterialPageRoute(
           builder: (context) => const SettingsPage(
@@ -83,18 +93,20 @@ class _MainPageState extends State<MainPage> {
     streamForWifi = Connectivity()
         .onConnectivityChanged
         .listen((ConnectivityResult result) async {
-      if (result==ConnectivityResult.none) {
-        setState(() {
-          wifi=Wifi.notConnected;
-        });
-      } else {
-        setState(() {
-          wifi=Wifi.connected;
-        });
-        await Future.delayed(const Duration(seconds: 2));
-        setState(() {
-          wifi=Wifi.ready;
-        });
+      if (wifi != null) {
+        if (result == ConnectivityResult.none) {
+          setState(() {
+            wifi = Wifi.notConnected;
+          });
+        } else {
+          setState(() {
+            wifi = Wifi.connected;
+          });
+          await Future.delayed(const Duration(seconds: 2));
+          setState(() {
+            wifi = Wifi.ready;
+          });
+        }
       }
     });
 
@@ -298,11 +310,13 @@ class _MainPageState extends State<MainPage> {
   }
 
   Future playSong() async {
-    await player.setUrl(currentPlayingSong == null
-        ? currentOwnSong['songUrl']
-        : currentPlayingSong!.songUrl);
+    if (wifi != Wifi.notConnected) {
+      await player.setUrl(currentPlayingSong == null
+          ? currentOwnSong['songUrl']
+          : currentPlayingSong!.songUrl);
 
-    startPlaying();
+      startPlaying();
+    }
   }
 
   Future startPlaying() async {
@@ -497,10 +511,12 @@ class _MainPageState extends State<MainPage> {
         HomePage(
           onDataChange: onResultGet,
           onDotsClicked: onDotsClicked,
+          wifi: wifi == Wifi.notConnected ? false : true,
         ),
         SearchPage(
           onDataChange: onResultGet,
           onDotsClicked: onDotsClicked,
+          wifi: wifi == Wifi.notConnected ? false : true,
           isNormal: true,
         ),
         const StudioPage(),
@@ -515,13 +531,15 @@ class _MainPageState extends State<MainPage> {
   }
 
   void onResultGet(value) {
-    if (value.runtimeType == Song) {
-      onDataChange(value, false, null);
-    } else if (value.runtimeType == Playlist) {
-      currentPlaylist = value;
-      setPlaylist();
-    } else {
-      onDataChange(null, false, value);
+    if (wifi != Wifi.notConnected) {
+      if (value.runtimeType == Song) {
+        onDataChange(value, false, null);
+      } else if (value.runtimeType == Playlist) {
+        currentPlaylist = value;
+        setPlaylist();
+      } else {
+        onDataChange(null, false, value);
+      }
     }
   }
 

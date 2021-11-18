@@ -138,10 +138,12 @@ class _PlaylistAddingState extends State<PlaylistAdding> {
                       TextButton(
                           onPressed: () {
                             if (tECPlaylist.text == "") {
-                              Functions().showToast("Playlist name can't be empty");
+                              Functions()
+                                  .showToast("Playlist name can't be empty",null);
                             } else if (playlists.any((element) =>
                                 element.name == tECPlaylist.text)) {
-                              Functions().showToast("This playlist name already exits");
+                              Functions().showToast(
+                                  "This playlist name already exits",null);
                             } else {
                               setState(() {
                                 progress1 = true;
@@ -199,13 +201,13 @@ class _PlaylistAddingState extends State<PlaylistAdding> {
   InkWell widgetPlaylistContainer(BuildContext context, int index) {
     return InkWell(
       onTap: () {
-        Functions().showToast("Double tap for adding");
+        Functions().showToast("Double tap for adding",null);
       },
       onDoubleTap: () {
         if (playlists[index]
             .songs
             .any((element) => element.songId == widget.song.songId)) {
-          Functions().showToast("This song is already on this playlist");
+          Functions().showToast("This song is already on this playlist",null);
         } else {
           playlists[index].songs.insert(0, widget.song);
           box.put("playlists", playlists);
@@ -252,15 +254,23 @@ class _PlaylistAddingState extends State<PlaylistAdding> {
 
   ElevatedButton widgetButtonNewPlaylist(BuildContext context) {
     return ElevatedButton(
-      onPressed: () => setState(() {
-        isAddingPlaylist = true;
-      }),
+      onPressed: () async {
+        await Functions().checkInternetConnection().then((value) {
+          if (value) {
+            setState(() {
+              isAddingPlaylist = true;
+            });
+          }else{
+            Functions().showToast("No internet connection!",null);
+          }
+        });
+      },
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all(fourthColor),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20.0),
-              side: BorderSide(color: fourthColor)),
+              side: const BorderSide(color: fourthColor)),
         ),
       ),
       child: Padding(
@@ -275,6 +285,4 @@ class _PlaylistAddingState extends State<PlaylistAdding> {
       ),
     );
   }
-
-  
 }

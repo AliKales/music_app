@@ -17,7 +17,9 @@ class LibraryPage extends StatefulWidget {
   final Function(dynamic) onResultGet;
   final Function(int) onPageChanging;
   const LibraryPage(
-      {Key? key, required this.onResultGet, required this.onPageChanging})
+      {Key? key,
+      required this.onResultGet,
+      required this.onPageChanging})
       : super(key: key);
 
   @override

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
@@ -19,14 +20,23 @@ class Functions {
     return now;
   }
 
-  void showToast(String text) {
+  void showToast(String text , ToastGravity? toastGravity){
     Fluttertoast.showToast(
         msg: text,
         toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.TOP,
+        gravity: toastGravity?? ToastGravity.TOP,
         timeInSecForIosWeb: 1,
         backgroundColor: Colors.grey,
         textColor: Colors.white,
         fontSize: 16.0);
+  }
+
+  Future<bool> checkInternetConnection() async{
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.none) {
+      return false;
+    }else{
+      return true;
+    }
   }
 }

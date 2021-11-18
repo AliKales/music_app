@@ -1,26 +1,23 @@
-import 'dart:convert';
-
-import 'package:audioplayers/audioplayers.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:free_music/UIs/scroller_text/custom_appbar.dart';
 import 'package:free_music/UIs/scroller_text/song_list_widget.dart';
 import 'package:free_music/colors.dart';
-import 'package:free_music/firebase/firebase_auth.dart';
 import 'package:free_music/firebase/firebase_firestore.dart';
-import 'package:free_music/functions.dart';
 import 'package:free_music/lists.dart';
 import 'package:free_music/models/song.dart';
 import 'package:free_music/screens/settings_page.dart';
 import 'package:free_music/size.dart';
 import 'package:hive/hive.dart';
-import 'package:http/http.dart';
 
 class HomePage extends StatefulWidget {
+  final bool wifi;
   final Function(Song) onDataChange;
   final Function(Song) onDotsClicked;
   const HomePage(
-      {Key? key, required this.onDataChange, required this.onDotsClicked})
+      {Key? key,
+      required this.onDataChange,
+      required this.onDotsClicked,
+      required this.wifi})
       : super(key: key);
 
   @override
@@ -108,7 +105,7 @@ class _HomePageState extends State<HomePage>
                       () async {
                     await showGeneralDialogFunc(Lists().musicGenres)
                         .then((value) {
-                      if (selectedMusicGenre != value) {
+                      if (selectedMusicGenre != value&&widget.wifi==true) {
                         setState(() {
                           selectedMusicGenre = value;
                           songsTaken = [];
@@ -125,7 +122,7 @@ class _HomePageState extends State<HomePage>
                       () async {
                     await showGeneralDialogFunc(Lists().languages)
                         .then((value) {
-                      if (selectedLanguage != value) {
+                      if (selectedLanguage != value&&widget.wifi==true) {
                         setState(() {
                           selectedLanguage = value;
                           songsTaken = [];
@@ -139,9 +136,9 @@ class _HomePageState extends State<HomePage>
                   widgetForSpace(3, 0),
                   songsTaken.isEmpty
                       ? Align(
-                        alignment: Alignment.center,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                          alignment: Alignment.center,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               widgetForSpace(10, 0),
                               progressSearching
@@ -165,37 +162,36 @@ class _HomePageState extends State<HomePage>
                                     ),
                             ],
                           ),
-                      )
+                        )
                       : ListView.builder(
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: songsTaken.length + 1,
-                        itemBuilder: (_, index) {
-                          if (index == songsTaken.length) {
-                            return lastWidgets();
-                          } else {
-                            if (index < songsTaken.length - 1) {
-                              return Column(
-                                children: [
-                                  widgetSongLists(index),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8),
-                                    child: Divider(
-                                      color: Colors.white,
-                                      height:
-                                          SizeConfig.safeBlockVertical! *
-                                              0.5,
-                                    ),
-                                  )
-                                ],
-                              );
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: songsTaken.length + 1,
+                          itemBuilder: (_, index) {
+                            if (index == songsTaken.length) {
+                              return lastWidgets();
                             } else {
-                              return widgetSongLists(index);
+                              if (index < songsTaken.length - 1) {
+                                return Column(
+                                  children: [
+                                    widgetSongLists(index),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8),
+                                      child: Divider(
+                                        color: Colors.white,
+                                        height:
+                                            SizeConfig.safeBlockVertical! * 0.5,
+                                      ),
+                                    )
+                                  ],
+                                );
+                              } else {
+                                return widgetSongLists(index);
+                              }
                             }
-                          }
-                        },
-                      ),
+                          },
+                        ),
                 ],
               ),
             ),
@@ -256,29 +252,31 @@ class _HomePageState extends State<HomePage>
   }
 
   Future getSongs() async {
-    setState(() {
-      progressSearching = true;
-    });
-    await FirebaseFirestoreService()
-        .getSongDatas(lastSongId, Lists().languagesGetter(selectedLanguage),
-            Lists().musicGenresGetter(selectedMusicGenre))
-        .then((value) {
-      if (lastSongId != "" && value.isEmpty) {
-        visibility1 = false;
-      }
-      for (var i = 0; i < value.length; i++) {
-        songsTaken.add(value[i]);
-        if (i == value.length - 1) {
-          lastSongId = value[i].songId;
-        }
-      }
+    if (widget.wifi) {
       setState(() {
-        progressSearching = false;
+        progressSearching = true;
       });
-      box.put(
-          "lastSongs|${Lists().languagesGetter(selectedLanguage)}|${Lists().musicGenresGetter(selectedMusicGenre)}",
-          songsTaken);
-    });
+      await FirebaseFirestoreService()
+          .getSongDatas(lastSongId, Lists().languagesGetter(selectedLanguage),
+              Lists().musicGenresGetter(selectedMusicGenre))
+          .then((value) {
+        if (lastSongId != "" && value.isEmpty) {
+          visibility1 = false;
+        }
+        for (var i = 0; i < value.length; i++) {
+          songsTaken.add(value[i]);
+          if (i == value.length - 1) {
+            lastSongId = value[i].songId;
+          }
+        }
+        setState(() {
+          progressSearching = false;
+        });
+        box.put(
+            "lastSongs|${Lists().languagesGetter(selectedLanguage)}|${Lists().musicGenresGetter(selectedMusicGenre)}",
+            songsTaken);
+      });
+    }
   }
 
   dynamic lastWidgets() {
