@@ -48,6 +48,7 @@ dependencies:
   hive_flutter: ^1.1.0
   just_audio: ^0.9.16
   connectivity_plus: ^2.0.3
+  url_launcher: ^6.0.13
   
 
 dev_dependencies:

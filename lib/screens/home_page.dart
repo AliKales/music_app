@@ -258,7 +258,7 @@ class _HomePageState extends State<HomePage>
       });
       await FirebaseFirestoreService()
           .getSongDatas(lastSongId, Lists().languagesGetter(selectedLanguage),
-              Lists().musicGenresGetter(selectedMusicGenre))
+              Lists().musicGenresGetter(selectedMusicGenre),context)
           .then((value) {
         if (lastSongId != "" && value.isEmpty) {
           visibility1 = false;
