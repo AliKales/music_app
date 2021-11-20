@@ -427,7 +427,7 @@ class _StudioSharePageState extends State<StudioSharePage> {
 
       try {
         DateTime day = DateTime(3000, 04, 04, 23, 59, 59);
-        await Functions().getCurrentGlobalTime().then((currentTime) {
+        await Functions().getCurrentGlobalTime(context).then((currentTime) {
           String songIdd =
               "${day.difference(currentTime).toString()}|${FirebaseAuthService().getUsername()}";
 

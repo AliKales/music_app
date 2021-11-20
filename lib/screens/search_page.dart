@@ -181,7 +181,7 @@ class _SearchPageState extends State<SearchPage>
           } else {
             if (widget.playlist!.songs.any(
                 (element) => element.songName == listSent[index].songName)) {
-              Functions().showToast("This song already exits",null);
+              Functions().showToast("This song already exits", null);
             } else {
               Navigator.pop(context, listSent[index]);
             }
@@ -209,14 +209,15 @@ class _SearchPageState extends State<SearchPage>
   }
 
   Future getSongs(String searchedString) async {
-    final bool wifi = widget.wifi??await Functions().checkInternetConnection();
+    final bool wifi =
+        widget.wifi ?? await Functions().checkInternetConnection();
     if (wifi) {
       songsTaken = [];
       setState(() {
         progressSearching = true;
       });
       await FirebaseFirestoreService()
-          .getSongDatasForSearch(searchedString)
+          .getSongDatasForSearch(searchedString, context)
           .then((value) {
         for (var i = 0; i < value.length; i++) {
           songsTaken.add(value[i]);

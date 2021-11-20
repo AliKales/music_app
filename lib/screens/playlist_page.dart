@@ -66,7 +66,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
     Functions().checkInternetConnection().then((value) async {
       if (value) {
         List listGet = await FirebaseFirestoreService().getOwnSongs(
-            widget.playlist.songs.isEmpty ? [] : widget.playlist.songs);
+            widget.playlist.songs.isEmpty ? [] : widget.playlist.songs,context);
         if (listGet.isEmpty) {
           setState(() {
             noSong = true;

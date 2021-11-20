@@ -148,7 +148,7 @@ class _PlaylistAddingState extends State<PlaylistAdding> {
                               setState(() {
                                 progress1 = true;
                               });
-                              Functions().getCurrentGlobalTime().then((value) {
+                              Functions().getCurrentGlobalTime(context).then((value) {
                                 playlists.insert(
                                     0,
                                     Playlist(

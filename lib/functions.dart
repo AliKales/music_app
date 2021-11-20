@@ -7,18 +7,26 @@ import 'package:http/http.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Functions {
-  Future<DateTime> getCurrentGlobalTime() async {
-    Response response = await get(
-        Uri.parse("http://worldtimeapi.org/api/timezone/Europe/Istanbul"));
-    Map worldData = jsonDecode(response.body);
-    DateTime now = DateTime(
-      int.parse(worldData['datetime'].substring(0, 4)),
-      int.parse(worldData['datetime'].substring(5, 7)),
-      int.parse(worldData['datetime'].substring(8, 10)),
-      int.parse(worldData['datetime'].substring(11, 13)),
-      int.parse(worldData['datetime'].substring(14, 16)),
-      int.parse(worldData['datetime'].substring(17, 19)),
-    );
+  Future<DateTime> getCurrentGlobalTime(context) async {
+    DateTime now; 
+    try {
+      Response response = await get(
+          Uri.parse("http://worldtimeapi.org/api/timezone/Europe/Istanbul"));
+      Map worldData = jsonDecode(response.body);
+      now = DateTime(
+        int.parse(worldData['datetime'].substring(0, 4)),
+        int.parse(worldData['datetime'].substring(5, 7)),
+        int.parse(worldData['datetime'].substring(8, 10)),
+        int.parse(worldData['datetime'].substring(11, 13)),
+        int.parse(worldData['datetime'].substring(14, 16)),
+        int.parse(worldData['datetime'].substring(17, 19)),
+      );
+    } catch (e) {
+      now = DateTime.now();
+      Functions().showAlertDialog(context,
+          "Unexpected error, please try again later or check app update!");
+    }
+
     return now;
   }
 
@@ -53,11 +61,14 @@ class Functions {
               visible: content ==
                   "Unexpected error, please try again later or check app update!",
               child: OutlinedButton(
-                onPressed: () async {                   
+                onPressed: () async {
                   Navigator.pop(context);
-                  await canLaunch("https://play.google.com/store/apps/details?id=com.caroby.caroby_share_your_music").then((value) {
-                    if(value){
-                      launch("https://play.google.com/store/apps/details?id=com.caroby.caroby_share_your_music");
+                  await canLaunch(
+                          "https://play.google.com/store/apps/details?id=com.caroby.caroby_share_your_music")
+                      .then((value) {
+                    if (value) {
+                      launch(
+                          "https://play.google.com/store/apps/details?id=com.caroby.caroby_share_your_music");
                     }
                   });
                 },

@@ -25,9 +25,10 @@ class FirebaseFirestoreService {
     return song.songUrl;
   }
 
-  Future<List> getSongDatasForSearch(String searchedString) async {
+  Future<List> getSongDatasForSearch(String searchedString,context) async {
     List listReturn = [];
-    await firestore
+    try {
+      await firestore
         .collection("songs")
         .where('songNameForDB', isGreaterThanOrEqualTo: searchedString)
         .where('songNameForDB', isLessThanOrEqualTo: searchedString + "\uF7FF")
@@ -38,6 +39,16 @@ class FirebaseFirestoreService {
         listReturn.add(Song.fromJson(json.data()));
       }
     });
+    } on FirebaseException catch (e) {
+      if(e.code=="permission-denied"){
+        Functions().showAlertDialog(context, "Databases are close. Please try again later!");
+      }else{
+        Functions().showAlertDialog(context, "Unexpected error, please try again later or check app update!");
+      }
+    }catch (e){
+      Functions().showAlertDialog(context, "Unexpected error, please try again later or check app update!");
+    }
+    
     return listReturn;
   }
 
@@ -96,7 +107,7 @@ class FirebaseFirestoreService {
         Functions().showAlertDialog(context, "Unexpected error, please try again later or check app update!");
       }
     }catch (e){
-      Functions().showAlertDialog(context, "Unexpected error, please try again later!");
+      Functions().showAlertDialog(context, "Unexpected error, please try again later or check app update!");
     }
 
     return listReturn;
@@ -117,9 +128,11 @@ class FirebaseFirestoreService {
     });
   }
 
-  Future<List> getOwnSongs(List listFromDatabase) async {
+  Future<List> getOwnSongs(List listFromDatabase,context) async {
     List listReturn = listFromDatabase;
-    await firestore
+
+    try {
+      await firestore
         .collection("artists")
         .doc(FirebaseAuthService().getUsername())
         .collection("singles")
@@ -174,6 +187,17 @@ class FirebaseFirestoreService {
         }
       }
     });
+   
+    } on FirebaseException catch (e) {
+      if(e.code=="permission-denied"){
+        Functions().showAlertDialog(context, "Databases are close. Please try again later!");
+      }else{
+        Functions().showAlertDialog(context, "Unexpected error, please try again later or check app update!");
+      }
+    }catch (e){
+      Functions().showAlertDialog(context, "Unexpected error, please try again later or check app update!");
+    }
+    
     return listReturn;
   }
 
