@@ -6,7 +6,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:free_music/colors.dart';
 import 'package:free_music/firebase/firebase_auth.dart';
 import 'package:free_music/firebase/firebase_firestore.dart';
@@ -393,8 +392,8 @@ class _StudioSharePageState extends State<StudioSharePage> {
                     Navigator.pop(context);
                   } else {
                     Navigator.pop(context);
-                    Functions().showToast(
-                        "No internet connection!", ToastGravity.BOTTOM);
+                    // Functions().showToast(
+                    //     "No internet connection!", ToastGravity.BOTTOM);
                   }
                 });
               },

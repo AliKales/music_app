@@ -1,11 +1,5 @@
-import 'dart:ui';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:free_music/colors.dart';
 import 'package:free_music/firebase/firebase_auth.dart';
 import 'package:free_music/functions.dart';
@@ -32,7 +26,7 @@ class _PlaylistAddingState extends State<PlaylistAdding> {
   @override
   void initState() {
     // TODO: implement initState
-    super.initState();
+    super.initState();  
     playlists = box.get("playlists") ?? [];
   }
 

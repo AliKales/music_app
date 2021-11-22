@@ -43,13 +43,11 @@ dependencies:
   permission_handler: ^8.1.6
   audio_video_progress_bar: ^0.9.0
   intl: ^0.17.0
-  fluttertoast: ^8.0.8
   hive: ^2.0.4
   hive_flutter: ^1.1.0
   just_audio: ^0.9.16
   connectivity_plus: ^2.0.3
   url_launcher: ^6.0.13
-  
 
 dev_dependencies:
   hive_generator: ^1.1.1

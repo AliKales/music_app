@@ -3,7 +3,6 @@ import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:free_music/UIs/scroller_text/custom_appbar.dart';
 import 'package:free_music/colors.dart';
 import 'package:free_music/firebase/firebase_auth.dart';
@@ -380,8 +379,8 @@ class _StudioPageState extends State<StudioPage>
         });
       });
     } catch (e) {
-      Functions().showToast(
-          "Unexpected error. Please try again later!", ToastGravity.BOTTOM);
+      // Functions().showToast(
+      //     "Unexpected error. Please try again later!", ToastGravity.BOTTOM);
     }
   }
 

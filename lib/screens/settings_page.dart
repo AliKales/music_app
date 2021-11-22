@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:free_music/UIs/scroller_text/profile_photo.dart';
 import 'package:free_music/colors.dart';
 import 'package:free_music/functions.dart';
@@ -171,8 +170,8 @@ class _SettingsPageState extends State<SettingsPage> {
                                           Text(checkUserNameAndPassword())));
                             }
                           } else {
-                            Functions().showToast(
-                                "No internet Connection!", ToastGravity.BOTTOM);
+                            // Functions().showToast(
+                            //     "No internet Connection!", ToastGravity.BOTTOM);
                           }
                         });
                       },
@@ -233,8 +232,8 @@ class _SettingsPageState extends State<SettingsPage> {
                                           Text(checkUserNameAndPassword())));
                             }
                           } else {
-                            Functions().showToast(
-                                "No internet Connection!", ToastGravity.BOTTOM);
+                            // Functions().showToast(
+                            //     "No internet Connection!", ToastGravity.BOTTOM);
                           }
                         });
                       },

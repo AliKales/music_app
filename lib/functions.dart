@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:free_music/colors.dart';
 import 'package:http/http.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -30,15 +29,15 @@ class Functions {
     return now;
   }
 
-  void showToast(String text, ToastGravity? toastGravity) {
-    Fluttertoast.showToast(
-        msg: text,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: toastGravity ?? ToastGravity.TOP,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.grey,
-        textColor: Colors.white,
-        fontSize: 16.0);
+  void showToast(String text, var toastGravity) {
+    // Fluttertoast.showToast(
+    //     msg: text,
+    //     toastLength: Toast.LENGTH_SHORT,
+    //     gravity: toastGravity ?? ToastGravity.TOP,
+    //     timeInSecForIosWeb: 1,
+    //     backgroundColor: Colors.grey,
+    //     textColor: Colors.white,
+    //     fontSize: 16.0);
   }
 
   void showAlertDialog(context, String content) {
