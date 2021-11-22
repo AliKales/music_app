@@ -81,7 +81,7 @@ class _HomePageState extends State<HomePage>
                   CustomAppbar(
                     text: greeting(),
                     padding: 0,
-                    leftWidgets: [],
+                    leftWidgets: const [],
                     rightWidgets: [
                       IconButton(
                         onPressed: () {
@@ -108,6 +108,7 @@ class _HomePageState extends State<HomePage>
                       if (selectedMusicGenre != value&&widget.wifi==true) {
                         setState(() {
                           selectedMusicGenre = value;
+                                                    lastSongId="";
                           songsTaken = [];
                         });
                         if (selectedLanguage != 0 && selectedMusicGenre != 0) {
@@ -125,6 +126,7 @@ class _HomePageState extends State<HomePage>
                       if (selectedLanguage != value&&widget.wifi==true) {
                         setState(() {
                           selectedLanguage = value;
+                          lastSongId="";
                           songsTaken = [];
                         });
                         if (selectedLanguage != 0 && selectedMusicGenre != 0) {
@@ -272,6 +274,9 @@ class _HomePageState extends State<HomePage>
         setState(() {
           progressSearching = false;
         });
+        if(songsTaken.length<30){
+          songsTaken.removeRange(30, songsTaken.length);
+        }
         box.put(
             "lastSongs|${Lists().languagesGetter(selectedLanguage)}|${Lists().musicGenresGetter(selectedMusicGenre)}",
             songsTaken);
