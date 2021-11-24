@@ -366,7 +366,7 @@ class _StudioSharePageState extends State<StudioSharePage> {
     );
   }
 
-  void funcShare() async {
+  Future funcShare() async {
     FocusScope.of(context).unfocus();
     bool isReadyToShare = false;
     await showDialog(
@@ -446,6 +446,7 @@ class _StudioSharePageState extends State<StudioSharePage> {
                   tECSongName.text.trim().replaceAll(" ", "").toLowerCase());
 
           File file = File(widget.path);
+
 
           Stream<firebase_storage.TaskSnapshot> stream = firebase_storage
               .FirebaseStorage.instance

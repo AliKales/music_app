@@ -133,11 +133,11 @@ class _PlaylistAddingState extends State<PlaylistAdding> {
                           onPressed: () {
                             if (tECPlaylist.text == "") {
                               Functions()
-                                  .showToast("Playlist name can't be empty",null);
+                                  .showToast("Playlist name can't be empty",context);
                             } else if (playlists.any((element) =>
                                 element.name == tECPlaylist.text)) {
                               Functions().showToast(
-                                  "This playlist name already exits",null);
+                                  "This playlist name already exits",context);
                             } else {
                               setState(() {
                                 progress1 = true;
@@ -195,13 +195,13 @@ class _PlaylistAddingState extends State<PlaylistAdding> {
   InkWell widgetPlaylistContainer(BuildContext context, int index) {
     return InkWell(
       onTap: () {
-        Functions().showToast("Double tap for adding",null);
+        Functions().showToast("Double tap for adding",context);
       },
       onDoubleTap: () {
         if (playlists[index]
             .songs
             .any((element) => element.songId == widget.song.songId)) {
-          Functions().showToast("This song is already on this playlist",null);
+          Functions().showToast("This song is already on this playlist",context);
         } else {
           playlists[index].songs.insert(0, widget.song);
           box.put("playlists", playlists);
@@ -255,7 +255,7 @@ class _PlaylistAddingState extends State<PlaylistAdding> {
               isAddingPlaylist = true;
             });
           }else{
-            Functions().showToast("No internet connection!",null);
+            Functions().showToast("No internet connection!",context);
           }
         });
       },
@@ -270,7 +270,7 @@ class _PlaylistAddingState extends State<PlaylistAdding> {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 9.0, vertical: 12),
         child: Text(
-          'Yeni Çalma Listesi',
+          'New Playlist',
           style: Theme.of(context)
               .textTheme
               .subtitle1!

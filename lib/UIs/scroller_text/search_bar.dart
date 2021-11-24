@@ -42,7 +42,7 @@ class _SearchBarState extends State<SearchBar> {
     if (!isSearchBarActive) {
       return Center(
         child: Text(
-          "Ara",
+          "Search",
           style: Theme.of(context)
               .textTheme
               .headline6!
@@ -84,7 +84,7 @@ class _SearchBarState extends State<SearchBar> {
               cursorColor: Colors.white,
               decoration: InputDecoration(
                   border: InputBorder.none,
-                  hintText: "Arama sorgusu",
+                  hintText: "Search query",
                   hintStyle: Theme.of(context)
                       .textTheme
                       .subtitle1!

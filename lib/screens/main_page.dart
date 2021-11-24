@@ -440,18 +440,18 @@ class _MainPageState extends State<MainPage> {
                   ? widgetTextButtonForDotsClicked(() {
                       func = 1;
                       Navigator.pop(context);
-                    }, "Beğen", Icons.favorite_outline_rounded)
+                    }, "Like", Icons.favorite_outline_rounded)
                   : widgetTextButtonForDotsClicked(() {
                       func = 2;
                       Navigator.pop(context);
-                    }, "Beğenildi", Icons.favorite_rounded),
+                    }, "Liked", Icons.favorite_rounded),
               SizedBox(
                 height: SizeConfig.safeBlockVertical! * 3,
               ),
               widgetTextButtonForDotsClicked(() {
                 func = 3;
                 Navigator.pop(context);
-              }, "Çalma Listesine Ekle", Icons.playlist_add),
+              }, "Add to Playlist", Icons.playlist_add),
             ],
           ),
         );

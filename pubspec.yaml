@@ -36,10 +36,10 @@ dependencies:
   cupertino_icons: ^1.0.2
   audioplayers: ^0.20.1
   scroll_to_index: ^2.0.0
-  firebase_auth: ^3.1.1
-  firebase_core: ^1.6.0
-  firebase_storage: ^10.0.3
-  cloud_firestore: ^2.5.3
+  firebase_auth: ^3.2.0
+  firebase_core: ^1.10.0
+  firebase_storage: ^10.1.0
+  cloud_firestore: ^3.1.0
   permission_handler: ^8.1.6
   audio_video_progress_bar: ^0.9.0
   intl: ^0.17.0
@@ -48,6 +48,7 @@ dependencies:
   just_audio: ^0.9.16
   connectivity_plus: ^2.0.3
   url_launcher: ^6.0.13
+  
 
 dev_dependencies:
   hive_generator: ^1.1.1

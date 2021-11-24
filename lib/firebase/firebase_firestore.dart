@@ -19,7 +19,7 @@ class FirebaseFirestoreService {
         .getDownloadURL()
         .then((value) async {
       song.songUrl = value;
-      var doc = firestore.collection("songs").doc(song.songId);
+      var doc = FirebaseFirestore.instance.collection("songs").doc(song.songId);
       await doc.set(song.toMap());
     });
     return song.songUrl;
@@ -28,7 +28,7 @@ class FirebaseFirestoreService {
   Future<List> getSongDatasForSearch(String searchedString,context) async {
     List listReturn = [];
     try {
-      await firestore
+      await FirebaseFirestore.instance
         .collection("songs")
         .where('songNameForDB', isGreaterThanOrEqualTo: searchedString)
         .where('songNameForDB', isLessThanOrEqualTo: searchedString + "\uF7FF")
@@ -56,7 +56,7 @@ class FirebaseFirestoreService {
       String lastSongId, String language, String genre,context) async {
     List listReturn = [];
     try {
-      var ref = firestore.collection("songs");
+      var ref = FirebaseFirestore.instance.collection("songs");
 
       if (lastSongId == "") {
         List listFromDatabase = [];
@@ -114,7 +114,7 @@ class FirebaseFirestoreService {
   }
 
   Future putOwnSong(Song song) async {
-    await firestore
+    await FirebaseFirestore.instance
         .collection("artists")
         .doc(FirebaseAuthService().getUsername())
         .collection("singles")
@@ -132,7 +132,7 @@ class FirebaseFirestoreService {
     List listReturn = listFromDatabase;
 
     try {
-      await firestore
+      await FirebaseFirestore.instance
         .collection("artists")
         .doc(FirebaseAuthService().getUsername())
         .collection("singles")
@@ -144,7 +144,7 @@ class FirebaseFirestoreService {
             listFromDatabase[0]['path'] == json.data()['path']) {
           listReturn = [31];
         } else if (listFromDatabase.isEmpty) {
-          await firestore
+          await FirebaseFirestore.instance
               .collection("artists")
               .doc(FirebaseAuthService().getUsername())
               .collection("singles")
@@ -162,7 +162,7 @@ class FirebaseFirestoreService {
                   createdDate: DateTime.now()));
         } else {
           List list = [];
-          await firestore
+          await FirebaseFirestore.instance
               .collection("artists")
               .doc(FirebaseAuthService().getUsername())
               .collection("singles")
@@ -202,7 +202,7 @@ class FirebaseFirestoreService {
   }
 
   Future<void> increaseView(String songId) async {
-    await firestore.runTransaction((transaction) async {
+    await FirebaseFirestore.instance.runTransaction((transaction) async {
       DocumentReference postRef = firestore.collection('songs').doc(songId);
       DocumentSnapshot snapshot = await transaction.get(postRef);
       int likesCount = snapshot.get("views");

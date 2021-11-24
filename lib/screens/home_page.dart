@@ -96,7 +96,7 @@ class _HomePageState extends State<HomePage>
                   ),
                   widgetForSpace(5, 0),
                   Text(
-                    "Son Çıkan Şarkılar",
+                    "Recently Released",
                     style: Theme.of(context).textTheme.headline5!.copyWith(
                         color: Colors.white, fontWeight: FontWeight.bold),
                   ),
@@ -152,8 +152,8 @@ class _HomePageState extends State<HomePage>
                                   : Text(
                                       selectedLanguage == 0 ||
                                               selectedMusicGenre == 0
-                                          ? "LÜTFEN BİR TARZ VE DİL SEÇİN"
-                                          : "HAY AKSİ. İSTEDİĞİNİZ TARZDA VE DİLDE ŞARKI BULAMADIK :/",
+                                          ? "PLEASE PICK A GENRE & LANGUAGE"
+                                          : "SORRY. THERE'RE NO SONG FOR THIS GENRE & LANGUAGE :/",
                                       textAlign: TextAlign.center,
                                       style: Theme.of(context)
                                           .textTheme
@@ -274,7 +274,7 @@ class _HomePageState extends State<HomePage>
         setState(() {
           progressSearching = false;
         });
-        if(songsTaken.length<30){
+        if(songsTaken.length>30){
           songsTaken.removeRange(30, songsTaken.length);
         }
         box.put(
@@ -310,7 +310,7 @@ class _HomePageState extends State<HomePage>
                     padding: const EdgeInsets.symmetric(
                         horizontal: 9.0, vertical: 12),
                     child: Text(
-                      'Daha Fazla Gör',
+                      'See more',
                       style: Theme.of(context).textTheme.subtitle1!.copyWith(
                           color: fourthColor, fontWeight: FontWeight.bold),
                     ),

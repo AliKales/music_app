@@ -119,7 +119,7 @@ class _SearchPageState extends State<SearchPage>
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "Yakındaki Aramalar",
+                                "Recent searches",
                                 style: Theme.of(context)
                                     .textTheme
                                     .headline5!
@@ -181,7 +181,7 @@ class _SearchPageState extends State<SearchPage>
           } else {
             if (widget.playlist!.songs.any(
                 (element) => element.songName == listSent[index].songName)) {
-              Functions().showToast("This song already exits", null);
+              Functions().showToast("This song already exits", context);
             } else {
               Navigator.pop(context, listSent[index]);
             }

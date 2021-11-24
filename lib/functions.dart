@@ -29,15 +29,9 @@ class Functions {
     return now;
   }
 
-  void showToast(String text, var toastGravity) {
-    // Fluttertoast.showToast(
-    //     msg: text,
-    //     toastLength: Toast.LENGTH_SHORT,
-    //     gravity: toastGravity ?? ToastGravity.TOP,
-    //     timeInSecForIosWeb: 1,
-    //     backgroundColor: Colors.grey,
-    //     textColor: Colors.white,
-    //     fontSize: 16.0);
+  void showToast(String text,context) {
+    FocusScope.of(context).unfocus();
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:Text(text)));
   }
 
   void showAlertDialog(context, String content) {

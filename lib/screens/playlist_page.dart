@@ -87,7 +87,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
           });
         }
       } else {
-        Functions().showToast("No internet connection!", null);
+        Functions().showToast("No internet connection!", context);
         setState(() {
           playlist = Playlist(
               name: widget.playlist.name,

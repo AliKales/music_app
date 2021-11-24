@@ -85,7 +85,7 @@ class _SettingsPageState extends State<SettingsPage> {
           // ignore: prefer_const_literals_to_create_immutables
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Kullanıcı Adı",
+            Text("Username",
                 style: Theme.of(context).textTheme.headline5!.copyWith(
                     color: Colors.white, fontWeight: FontWeight.bold)),
             TextField(
@@ -104,7 +104,7 @@ class _SettingsPageState extends State<SettingsPage> {
             SizedBox(
               height: SizeConfig.safeBlockVertical! * 5,
             ),
-            Text("Parola",
+            Text("Password",
                 style: Theme.of(context).textTheme.headline5!.copyWith(
                     color: Colors.white, fontWeight: FontWeight.bold)),
             TextField(
@@ -170,8 +170,8 @@ class _SettingsPageState extends State<SettingsPage> {
                                           Text(checkUserNameAndPassword())));
                             }
                           } else {
-                            // Functions().showToast(
-                            //     "No internet Connection!", ToastGravity.BOTTOM);
+                            Functions().showToast(
+                                "No internet Connection!", context);
                           }
                         });
                       },
@@ -189,7 +189,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 9.0, vertical: 12),
                         child: Text(
-                          'Oturum aç',
+                          'Log In',
                           style: Theme.of(context)
                               .textTheme
                               .subtitle1!
@@ -232,8 +232,8 @@ class _SettingsPageState extends State<SettingsPage> {
                                           Text(checkUserNameAndPassword())));
                             }
                           } else {
-                            // Functions().showToast(
-                            //     "No internet Connection!", ToastGravity.BOTTOM);
+                            Functions().showToast(
+                                "No internet Connection!", context);
                           }
                         });
                       },
@@ -251,7 +251,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 9.0, vertical: 12),
                         child: Text(
-                          'Hesap Oluştur',
+                          'Sign Up',
                           style: Theme.of(context)
                               .textTheme
                               .subtitle1!

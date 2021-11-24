@@ -1,13 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/widgets.dart';
-import 'package:free_music/UIs/scroller_text/custom_appbar.dart';
 import 'package:free_music/UIs/scroller_text/profile_photo.dart';
-import 'package:free_music/colors.dart';
-import 'package:free_music/firebase/firebase_auth.dart';
 import 'package:free_music/models/playlist.dart';
-import 'package:free_music/models/song.dart';
 import 'package:free_music/screens/playlist_page.dart';
 import 'package:free_music/screens/settings_page.dart';
 import 'package:free_music/size.dart';
@@ -60,7 +53,7 @@ class _LibraryPageState extends State<LibraryPage> {
               children: [
                 widgetProfilePhoto(context),
                 SizedBox(width: SizeConfig.safeBlockHorizontal! * 4),
-                Text("Kitaplığın",
+                Text("Library",
                     style: Theme.of(context).textTheme.headline5!.copyWith(
                         color: Colors.white, fontWeight: FontWeight.bold)),
               ],
@@ -145,7 +138,7 @@ class _LibraryPageState extends State<LibraryPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    itemsForBody[index].name,
+                    getNameOfPlaylist(index),
                     overflow: TextOverflow.fade,
                     maxLines: 1,
                     softWrap: false,
@@ -188,6 +181,17 @@ class _LibraryPageState extends State<LibraryPage> {
         ),
       ),
     );
+  }
+
+  String getNameOfPlaylist(index){
+    switch (index) {
+      case 0:
+        return "Liked Songs";
+      case 1:
+        return "Own Songs";
+      default:
+        return itemsForBody[index].name;
+    }
   }
 
   Icon iconForListWidgets(index) {
